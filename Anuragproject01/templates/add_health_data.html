@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Health Data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js"></script>
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+        :root {
+            --primary-color: #28bf96;
+            --primary-color-dark: #209677;
+            --text-dark: #111827;
+            --text-light: #6b7280;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 5rem auto;
+            padding: 1.5rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: fadeIn 0.5s ease-in-out;
+            
+        }
+
+        .container label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .container input {
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            padding: 0.8rem 1.2rem;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+        :root {
+          --primary-color: #28bf96;
+          --primary-color-dark: #209677;
+          --text-dark: #111827;
+          --text-light: #6b7280;
+          --white: #ffffff;
+        }
+        nav {
+            padding: 2rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .nav__logo {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nav__links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .link a {
+            text-decoration: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .link a:hover {
+            color: var(--primary-color);
+        }
+        /* Navigation bar styles */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+nav .nav-links {
+    margin-top: 10px;
+}
+
+nav .nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-right: 15px;
+    font-size: 1rem;
+}
+
+nav .nav-links a:hover {
+    text-decoration: underline;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav__logo">HealthCare</div>
+        <ul class="nav__links">
+          <li class="link"><a href="/dashboard">Home</a></li>
+          <li class="link"><a href="#">About Us</a></li>
+          <li class="link"><a href="#">Courses</a></li>
+          <li class="link"><a href="#">Pages</a></li>
+          <li class="link"><a href="#">Blog</a></li>
+          <li class="link"><a href="#">Contact</a></li>
+        </ul>
+        <a href="{{ url_for('logout') }}">
+          <button style="
+            width: 90px;
+            padding: 0.7rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            margin-right: 50px;"
+            onmouseover="this.style.backgroundColor='var(--primary-color-dark)';"
+            onmouseout="this.style.backgroundColor='var(--primary-color)';">
+            Log Out
+          </button>
+        </a>    </nav>
+    <form method="POST" enctype="multipart/form-data">
+        <h1>Add Your Health Data</h1>
+        <div class="container">
+            
+
+            <!-- Blood Pressure (Required) -->
+            <label for="blood_pressure_systolic">Blood Pressure Systolic:</label>
+            <input type="text" id="blood_pressure_systolic" name="blood_pressure_systolic" required placeholder="e.g. 120">
+
+            <label for="blood_pressure_diastolic">Blood Pressure Diastolic:</label>
+            <input type="text" id="blood_pressure_diastolic" name="blood_pressure_diastolic" required placeholder="e.g. 78">
+
+            <!-- Heart Rate (Required) -->
+            <label for="heart_rate">Heart Rate (bpm):</label>
+            <input type="number" id="heart_rate" name="heart_rate" required placeholder="e.g. 71">
+
+            <!-- Temperature (Optional) -->
+            <label for="temperature">Temperature (°C):</label>
+            <input type="number" step="0.1" id="temperature" name="temperature" required placeholder="e.g. 36.7">
+        </div>
+
+        <div class="container hidden">
+            <!-- Respiratory Rate (Optional) -->
+            <label for="respiratory_rate">Respiratory Rate (breaths/min):</label>
+            <input type="number" id="respiratory_rate" name="respiratory_rate" required placeholder="e.g. 16">
+
+            <!-- Oxygen Saturation (Optional) -->
+            <label for="oxygen_saturation">Oxygen Saturation (SpO2):</label>
+            <input type="number" id="oxygen_saturation" name="oxygen_saturation" required placeholder="e.g. 97">
+
+            <!-- Blood Sugar (Optional) -->
+            <label for="blood_sugar">Blood Sugar Level (mg/dL):</label>
+            <input type="number" id="blood_sugar" name="blood_sugar" required placeholder="e.g. 92">
+
+            <!-- Cholesterol Level (Optional) -->
+            <label for="cholesterol_level">Cholesterol Level (mg/dL):</label>
+            <input type="number" id="cholesterol_level" name="cholesterol_level" required placeholder="e.g. 185">
+        </div>
+
+        <div class="container hidden">
+            <!-- Steps Taken (Optional) -->
+            <label for="steps_taken">Steps Taken:</label>
+            <input type="number" id="steps_taken" name="steps_taken" required placeholder="e.g. 5200">
+
+            <!-- Exercise Duration (Optional) -->
+            <label for="exercise_duration">Exercise Duration (minutes):</label>
+            <input type="number" id="exercise_duration" name="exercise_duration" required placeholder="e.g. 45">
+
+            <!-- Calories Burned (Optional) -->
+            <label for="calories_burned">Calories Burned:</label>
+            <input type="number" id="calories_burned" name="calories_burned" required placeholder="e.g. 225">
+
+            <!-- Sleep Duration (Optional) -->
+            <label for="sleep_duration">Sleep Duration (hours):</label>
+            <input type="number" id="sleep_duration" name="sleep_duration" required placeholder="e.g. 8">
+        </div>
+
+        <div class="container hidden">
+            <!-- Sleep Quality (Optional) -->
+            <label for="sleep_quality">Sleep Quality:</label>
+            <input type="text" id="sleep_quality" name="sleep_quality" required placeholder="e.g. good">
+
+            <!-- Meal Timing (Optional) -->
+            <label for="meal_timing">Meal Timing:</label>
+            <input type="text" id="meal_timing" name="meal_timing" required placeholder="e.g. 4">
+
+            <!-- Water Intake (Optional) -->
+            <label for="water_intake">Water Intake (mL):</label>
+            <input type="number" id="water_intake" name="water_intake" required placeholder="e.g. 2300">
+
+            <!-- Chronic Diseases (Optional) -->
+            <label for="chronic_diseases">Chronic Diseases:</label>
+            <input type="text" id="chronic_diseases" name="chronic_diseases" required placeholder="e.g. no">
+        </div>
+
+        <div class="container hidden">
+            <!-- Recent Diseases (Optional) -->
+            <label for="recent_diseases">Recent Diseases:</label>
+            <input type="text" id="recent_diseases" name="recent_diseases" required placeholder="e.g. no">
+
+            <!-- Allergies (Optional) -->
+            <label for="allergies">Allergies:</label>
+            <input type="text" id="allergies" name="allergies" required placeholder="e.g. no">
+
+            <!-- Medications (Optional) -->
+            <label for="medications">Medications:</label>
+            <input type="text" id="medications" name="medications" required placeholder="e.g. none">
+
+            <!-- Stress Level (Optional) -->
+            <label for="stress_level">Stress Level (1-10):</label>
+            <input type="number" id="stress_level" name="stress_level" required placeholder="e.g. 2">
+        </div>
+
+        <div class="container hidden">
+            <!-- Mood (Optional) -->
+            <label for="mood">Mood (1-10):</label>
+            <input type="text" id="mood" name="mood" required placeholder="e.g. 5">
+
+            <!-- Mental Health Conditions (Optional) -->
+            <label for="mental_health_conditions">Mental Health Conditions:</label>
+            <input type="text" id="mental_health_conditions" name="mental_health_conditions" required placeholder="e.g. none">
+
+            <!-- Air Quality (Optional) -->
+            <label for="air_quality">Air Quality (PM2.5):</label>
+            <input type="number" id="air_quality" name="air_quality" required placeholder="e.g. 4">
+
+            <!-- Weather Conditions (Optional) -->
+            <label for="weather_conditions">Weather Conditions:</label>
+            <input type="text" id="weather_conditions" name="weather_conditions" required placeholder="e.g. cloudy">
+        </div>
+
+        <div class="button-container" style="display: flex; justify-content: space-between; align-items: center;">
+            <button id="prevButton" style="
+                width: 90px;
+                padding: 0.7rem;
+                background-color: var(--primary-color);
+                color: var(--white);
+                font-size: 1.1rem;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.3s;
+                margin-right: 10px;" 
+                onmouseover="this.style.backgroundColor='var(--primary-color-dark)';"
+                onmouseout="this.style.backgroundColor='var(--primary-color)';" disabled>Previous</button>
+        
+            <button type="submit" style="
+                width: 100%;
+                padding: 0.7rem;
+                background-color: var(--primary-color);
+                color: var(--white);
+                font-size: 1.1rem;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.3s;
+                margin-right: 10px;" 
+                onmouseover="this.style.backgroundColor='var(--primary-color-dark)';"
+                onmouseout="this.style.backgroundColor='var(--primary-color)';">Submit Health Data</button>
+        
+            
+            <button id="nextButton" style="
+                width: 90px;
+                padding: 0.7rem;
+                background-color: var(--primary-color);
+                color: var(--white);
+                font-size: 1.1rem;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.3s;" 
+                onmouseover="this.style.backgroundColor='var(--primary-color-dark)';"
+                onmouseout="this.style.backgroundColor='var(--primary-color)';">Next</button>
+        </div>
+        
+    </form>
+
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const containers = document.querySelectorAll(".container");
+            const nextButton = document.querySelector("#nextButton");
+            const prevButton = document.querySelector("#prevButton");
+            let currentContainerIndex = 0;
+
+            // Show the first container and hide the rest
+            function updateContainerVisibility() {
+                containers.forEach((container, index) => {
+                    container.classList.toggle("hidden", index !== currentContainerIndex);
+                });
+
+                // Update button states
+                prevButton.disabled = currentContainerIndex === 0;
+                nextButton.disabled = currentContainerIndex === containers.length - 1;
+            }
+
+            // Event listeners for buttons
+            nextButton.addEventListener("click", () => {
+                if (currentContainerIndex < containers.length - 1) {
+                    currentContainerIndex++;
+                    updateContainerVisibility();
+                }
+            });
+
+            prevButton.addEventListener("click", () => {
+                if (currentContainerIndex > 0) {
+                    currentContainerIndex--;
+                    updateContainerVisibility();
+                }
+            });
+
+            // Initialize visibility
+            updateContainerVisibility();
+        });
+    </script>    
+
+
+<audio id="alarmSound" src="{{ url_for('static', filename='alarm1.mp3') }}" preload="auto"></audio>
+<audio id="reminderSound" src="{{ url_for('static', filename='reminder.mp3') }}" preload="auto"></audio>
+
+<script>
+        // Connect to the server
+        var socket = io.connect('https://3.110.151.140:5000');
+
+        // Listen for the 'play_alarm_sound' event from the server
+        socket.on('play_alarm_sound', function(data) {
+            console.log('Reminder text: ' + data.message);  // Optional: to log the message
+
+            // Play the alarm and reminder sounds
+            var alarmSound = document.getElementById('alarmSound');
+            var reminderSound = document.getElementById('reminderSound');
+
+            // Play the alarm sound
+            alarmSound.play();
+            alarmSound.onended = function() {
+                // Play the reminder sound after the alarm ends
+                reminderSound.play();
+            };
+        });
+    </script>
+</body>
+</html>

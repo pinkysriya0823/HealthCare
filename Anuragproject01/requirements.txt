@@ -1,0 +1,4 @@
+Flask==2.2.3
+Flask-SQLAlchemy==3.0.1
+pytesseract==0.3.8
+Pillow==9.4.0
