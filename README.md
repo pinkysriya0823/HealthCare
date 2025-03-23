@@ -1,8 +1,5 @@
 AI-Powered Chronic Disease Detection System
 🚀 Early detection of chronic diseases using AI & predictive analytics
-
-🔗 GitHub Repository: HealthCare
-
 Overview
 This project is an AI-driven healthcare platform designed to detect chronic diseases such as diabetes, hypertension, cardiovascular diseases, and kidney disorders using machine learning models and predictive analytics.
 
@@ -62,6 +59,9 @@ Copy
 Edit
 npm install
 npm start
+
+Project:
+
 Future Enhancements 🚀
 🔹 Enhance AI models for better chronic disease prediction
 🔹 Integrate real-time data from wearable devices (Fitbit, Apple HealthKit, etc.)
