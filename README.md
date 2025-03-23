@@ -1,4 +1,5 @@
-AI-Powered Chronic Disease Detection System
+AI-Based Early Disease Detection System
+
 🚀 Early detection of chronic diseases using AI & predictive analytics
 Overview
 This project is an AI-driven healthcare platform designed to detect chronic diseases such as diabetes, hypertension, cardiovascular diseases, and kidney disorders using machine learning models and predictive analytics.
